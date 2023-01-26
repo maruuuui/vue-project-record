@@ -1,21 +1,18 @@
 <script lang="ts" setup>
+import { ref, onMounted, type Ref } from "vue";
 
-const records = [
-    {
-        id: 1,
-        start: "2022/11/1",
-        end: "2023/11/1",
-        projectName: "hogehoge",
-        projectDetail: "hogehogehogehogehogehoge"
-    },
-    {
-        id: 2,
-        start: "2021/11/1",
-        end: "2022/11/1",
-        projectName: "hugahuga",
-        projectDetail: "hugahugahugahugahugahuga"
-    },
-]
+import {getProjectRecords} from "@/util/api"
+import type { ProjectRecord } from "@/types";
+
+const records: Ref<ProjectRecord[]> = ref([]);
+
+
+onMounted(async () => {
+    console.log("mounted");
+    
+     records.value = await getProjectRecords()
+})
+
 </script>
 
 
