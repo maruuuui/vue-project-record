@@ -11,33 +11,33 @@ const requestHeader = {
 };
 export async function getProjectRecords() {
   type GetProjectRecordsResponse = {
-      id: number;
-      start_date: string;
-      end_date: string;
-      project_abstract: string;
-      project_detail: string;
-    }[];
+    id: number;
+    start_date: string;
+    end_date: string;
+    project_abstract: string;
+    project_detail: string;
+  }[];
   try {
-      const res = await axios.get<GetProjectRecordsResponse>(url);
-      if (res.status < 200 || res.status >= 400) {
-        throw Error("Albumの取得に失敗しました");
-      }
-
-      const items = res.data;
-      const albumDataArray: ProjectRecord[] = [];
-      for (const item of items) {
-        albumDataArray.push({
-          id: item.id,
-          startDate: item.start_date,
-          endDate: item.end_date,
-          projectAbstract: item.project_abstract,
-          projectDetail: item.project_detail,
-        });
-      }
-
-      return albumDataArray;
-    } catch (err) {
-      console.log(err);
-      throw Error("Albumの取得に失敗しました");
+    const res = await axios.get<GetProjectRecordsResponse>(url);
+    if (res.status < 200 || res.status >= 400) {
+      throw Error("接続に失敗しました");
     }
+
+    const items = res.data;
+    const albumDataArray: ProjectRecord[] = [];
+    for (const item of items) {
+      albumDataArray.push({
+        id: item.id,
+        startDate: item.start_date,
+        endDate: item.end_date,
+        projectAbstract: item.project_abstract,
+        projectDetail: item.project_detail,
+      });
+    }
+
+    return albumDataArray;
+  } catch (err) {
+    console.log(err);
+    throw Error("接続に失敗しました");
+  }
 }
