@@ -4,16 +4,16 @@ import type { ProjectRecord } from "@/types";
 const records = [
   {
     id: 1,
-    start: "2022/11/1",
-    end: "2023/11/1",
-    projectName: "hogehoge",
+    startDate: "2022/11/1",
+    endDate: "2023/11/1",
+    projectAbstract: "hogehoge",
     projectDetail: "hogehogehogehogehogehoge",
   },
   {
     id: 2,
-    start: "2021/11/1",
-    end: "2022/11/1",
-    projectName: "hugahuga",
+    startDate: "2021/11/1",
+    endDate: "2022/11/1",
+    projectAbstract: "hugahuga",
     projectDetail: "hugahugahugahugahugahuga",
   },
 ];

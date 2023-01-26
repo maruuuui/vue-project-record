@@ -7,8 +7,6 @@ import type { ProjectRecord } from "@/types";
 const records: Ref<ProjectRecord[]> = ref([]);
 
 onMounted(async () => {
-  console.log("mounted");
-
   records.value = await getProjectRecords();
 });
 </script>
@@ -28,9 +26,9 @@ onMounted(async () => {
       <tbody>
         <tr v-for="(record, idx) in records" :key="record.id">
           <th scope="row">{{ idx }}</th>
-          <td>{{ record.start }}</td>
-          <td>{{ record.end }}</td>
-          <td>{{ record.projectName }}</td>
+          <td>{{ record.startDate }}</td>
+          <td>{{ record.endDate }}</td>
+          <td>{{ record.projectAbstract }}</td>
           <td>{{ record.projectDetail }}</td>
         </tr>
       </tbody>

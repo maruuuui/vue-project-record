@@ -1,7 +1,7 @@
 export type ProjectRecord = {
   id: number;
-  start: string;
-  end: string;
-  projectName: string;
+  startDate: string;
+  endDate: string;
+  projectAbstract: string;
   projectDetail: string;
 };
