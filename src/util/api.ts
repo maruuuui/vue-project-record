@@ -1,24 +1,43 @@
+import axios from "axios";
 import type { ProjectRecord } from "@/types";
 
-// getProjectRecords実装までの仮の案件履歴
-const records = [
-  {
-    id: 1,
-    startDate: "2022/11/1",
-    endDate: "2023/11/1",
-    projectAbstract: "hogehoge",
-    projectDetail: "hogehogehogehogehogehoge",
-  },
-  {
-    id: 2,
-    startDate: "2021/11/1",
-    endDate: "2022/11/1",
-    projectAbstract: "hugahuga",
-    projectDetail: "hugahugahugahugahugahuga",
-  },
-];
+// デプロイ時にはawsのurlに差し替える
+const url =
+  typeof import.meta.env.VITE_BACKEND_HOST == "string"
+    ? import.meta.env.VITE_BACKEND_HOST
+    : "http://localhost:8000/projectDetail/";
+const requestHeader = {
+  "Content-Type": "application/json",
+};
 export async function getProjectRecords() {
-  return new Promise<ProjectRecord[]>((resolve) => {
-    resolve(records);
-  });
+  type GetProjectRecordsResponse = {
+      id: number;
+      start_date: string;
+      end_date: string;
+      project_abstract: string;
+      project_detail: string;
+    }[];
+  try {
+      const res = await axios.get<GetProjectRecordsResponse>(url);
+      if (res.status < 200 || res.status >= 400) {
+        throw Error("Albumの取得に失敗しました");
+      }
+
+      const items = res.data;
+      const albumDataArray: ProjectRecord[] = [];
+      for (const item of items) {
+        albumDataArray.push({
+          id: item.id,
+          startDate: item.start_date,
+          endDate: item.end_date,
+          projectAbstract: item.project_abstract,
+          projectDetail: item.project_detail,
+        });
+      }
+
+      return albumDataArray;
+    } catch (err) {
+      console.log(err);
+      throw Error("Albumの取得に失敗しました");
+    }
 }
