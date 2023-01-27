@@ -1,14 +1,24 @@
 <script lang="ts" setup>
 import Datepicker from "vue3-datepicker";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+const now = new Date();
+const startDateRef = ref(now);
 
-const startDateRef = ref(new Date());
-const endDateRef = ref(new Date());
+const nextMonth = new Date();
+nextMonth.setMonth(now.getMonth() + 1);
+const endDateRef = ref(nextMonth);
 
 let startDate = "";
 let endDate = "";
 let projectAbstract = "";
 let projectDetail = "";
+
+const enddateStyleObject = reactive({
+  display: "none",
+});
+const projectAbstractStyleObject = reactive({
+  display: "none",
+});
 
 function post() {
   console.log("post()が実行されたよ");
@@ -21,17 +31,44 @@ function post() {
     projectAbstract: projectAbstract,
     projectDetail: projectDetail,
   });
+  if (validate()) {
+    console.log("バリデーションOK");
+    //バックエンドにpostする
+  }
+}
+
+// バリデーションチェック
+function validate(): boolean {
+  // 終了日が開始日以降であることをチェック
+  let isValid = true;
+  if (startDateRef.value > endDateRef.value) {
+    isValid = false;
+    // エラーメッセージ表示
+    enddateStyleObject.display = "block";
+  } else {
+    enddateStyleObject.display = "none";
+  }
+
+  // 案件概要の入力チェック
+  if (projectAbstract === "") {
+    isValid = false;
+    // エラーメッセージ表示
+    projectAbstractStyleObject.display = "block";
+  } else {
+    projectAbstractStyleObject.display = "none";
+  }
+
+  return isValid;
 }
 
 // DateをYYYY-MM-DD形式にフォーマットする
 function dateToString(d: Date): string {
   const year = d.getFullYear();
-  const month = ("0" + d.getMonth() + 1).toString().slice(-2);
+  const month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
   const day = ("0" + d.getDate().toString()).slice(-2);
   const formatted = `${year}-${month}-${day}`;
   return formatted;
 }
-
 </script>
 
 <template>
@@ -73,6 +110,13 @@ function dateToString(d: Date): string {
               id="endDateFormControlInput"
               v-model="endDateRef"
             />
+            <div
+              id="enddate-invalid-message"
+              class="invalid-message"
+              :style="enddateStyleObject"
+            >
+              終了日には開始日以降を設定してください。
+            </div>
           </div>
           <div class="mb-3">
             <label for="projectAbstractFormControlInput" class="form-label"
@@ -84,29 +128,28 @@ function dateToString(d: Date): string {
               id="projectAbstractFormControlInput"
               v-model="projectAbstract"
             />
+            <div
+              id="project-abstract-invalid-message"
+              class="invalid-message"
+              :style="projectAbstractStyleObject"
+            >
+              このフィールドは必須です。
+            </div>
           </div>
           <div class="mb-3">
             <label for="projectDetailFormControlInput" class="form-label"
               >案件詳細</label
             >
-            <!-- <input
-              type="text"
+            <textarea
               class="form-control"
               id="projectDetailFormControlInput"
+              rows="3"
               v-model="projectDetail"
-            /> -->
-            <textarea 
-            class="form-control" 
-            id="projectDetailFormControlInput"
-            rows="3"
-            v-model="projectDetail"
-
             ></textarea>
-
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="post">
+          <button type="submit" class="btn btn-primary" @click="post">
             新規作成
           </button>
         </div>
@@ -114,3 +157,13 @@ function dateToString(d: Date): string {
     </div>
   </div>
 </template>
+
+<style scoped>
+.invalid-message {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+</style>
