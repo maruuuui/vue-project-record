@@ -50,23 +50,21 @@ export async function postProjectRecord(
     end_date: string;
     project_abstract: string;
     project_detail: string;
-    member_id: number
+    member_id: number;
   };
-  const postData =  {
+  const postData = {
     start_date: projectRecord.startDate,
     end_date: projectRecord.endDate,
     project_abstract: projectRecord.projectAbstract,
     project_detail: projectRecord.projectDetail,
-    member:1
-  }
+    member: 1,
+  };
   console.log(postData);
-  
+
   try {
-    const res = await axios.post<PostProjectRecordsRequest>(
-      url,
-      postData,
-      { headers: requestHeader }
-    );
+    const res = await axios.post<PostProjectRecordsRequest>(url, postData, {
+      headers: requestHeader,
+    });
     if (res.status < 200 || res.status >= 400) {
       throw Error("接続に失敗しました");
     }
@@ -76,4 +74,8 @@ export async function postProjectRecord(
     console.log(err);
     throw Error("接続に失敗しました");
   }
+}
+
+export async function updateProjectRecord(projectRecord: ProjectRecord) {
+  //wip
 }

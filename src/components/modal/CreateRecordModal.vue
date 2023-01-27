@@ -3,6 +3,7 @@ import Datepicker from "vue3-datepicker";
 import { ref, reactive } from "vue";
 
 import { postProjectRecord } from "@/util/api";
+import { dateToString } from "@/util/dateUtil";
 
 const now = new Date();
 const startDateRef = ref(now);
@@ -28,12 +29,6 @@ async function post() {
   startDate = dateToString(startDateRef.value);
   endDate = dateToString(endDateRef.value);
 
-  console.log({
-    startDate: startDate,
-    endDate: endDate,
-    projectAbstract: projectAbstract,
-    projectDetail: projectDetail,
-  });
   if (validate()) {
     console.log("バリデーションOK");
     //バックエンドにpostする
@@ -74,15 +69,6 @@ function validate(): boolean {
   }
 
   return isValid;
-}
-
-// DateをYYYY-MM-DD形式にフォーマットする
-function dateToString(d: Date): string {
-  const year = d.getFullYear();
-  const month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
-  const day = ("0" + d.getDate().toString()).slice(-2);
-  const formatted = `${year}-${month}-${day}`;
-  return formatted;
 }
 </script>
 
