@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import Datepicker from "vue3-datepicker";
 import { ref, reactive } from "vue";
+
+import { postProjectRecord } from "@/util/api";
+
 const now = new Date();
 const startDateRef = ref(now);
 
@@ -20,7 +23,7 @@ const projectAbstractStyleObject = reactive({
   display: "none",
 });
 
-function post() {
+async function post() {
   console.log("post()が実行されたよ");
   startDate = dateToString(startDateRef.value);
   endDate = dateToString(endDateRef.value);
@@ -34,6 +37,18 @@ function post() {
   if (validate()) {
     console.log("バリデーションOK");
     //バックエンドにpostする
+    const requestData = {
+      startDate: startDate,
+      endDate: endDate,
+      projectAbstract: projectAbstract,
+      projectDetail: projectDetail,
+    };
+    try {
+      await postProjectRecord(requestData);
+      console.log("ok");
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

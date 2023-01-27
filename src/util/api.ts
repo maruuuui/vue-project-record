@@ -24,9 +24,9 @@ export async function getProjectRecords() {
     }
 
     const items = res.data;
-    const albumDataArray: ProjectRecord[] = [];
+    const dataArray: ProjectRecord[] = [];
     for (const item of items) {
-      albumDataArray.push({
+      dataArray.push({
         id: item.id,
         startDate: item.start_date,
         endDate: item.end_date,
@@ -35,7 +35,43 @@ export async function getProjectRecords() {
       });
     }
 
-    return albumDataArray;
+    return dataArray;
+  } catch (err) {
+    console.log(err);
+    throw Error("接続に失敗しました");
+  }
+}
+
+export async function postProjectRecord(
+  projectRecord: Omit<ProjectRecord, "id">
+) {
+  type PostProjectRecordsRequest = {
+    start_date: string;
+    end_date: string;
+    project_abstract: string;
+    project_detail: string;
+    member_id: number
+  };
+  const postData =  {
+    start_date: projectRecord.startDate,
+    end_date: projectRecord.endDate,
+    project_abstract: projectRecord.projectAbstract,
+    project_detail: projectRecord.projectDetail,
+    member:1
+  }
+  console.log(postData);
+  
+  try {
+    const res = await axios.post<PostProjectRecordsRequest>(
+      url,
+      postData,
+      { headers: requestHeader }
+    );
+    if (res.status < 200 || res.status >= 400) {
+      throw Error("接続に失敗しました");
+    }
+
+    return res;
   } catch (err) {
     console.log(err);
     throw Error("接続に失敗しました");
