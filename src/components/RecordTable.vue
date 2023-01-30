@@ -4,25 +4,31 @@ import { ref, onMounted, type Ref } from "vue";
 import { getProjectRecords, deleteProjectRecord } from "@/util/api";
 import type { ProjectRecord } from "@/types";
 
+interface Props {
+  openEditRecordModal: (projectRecord: ProjectRecord) => void;
+}
+
+const props = defineProps<Props>();
+
 const records: Ref<ProjectRecord[]> = ref([]);
 
-async function fetchRecords(){
+async function fetchRecords() {
   records.value = await getProjectRecords();
 }
 
-
-async function onEditButtonClick(id:number){
-  console.log(`id:${id}の編集ボタンが押下されたよ`);
+async function onEditButtonClick(record: ProjectRecord) {
+  console.log(`id:${record.id}の編集ボタンが押下されたよ`);
+  props.openEditRecordModal(record);
 }
 
-async function onDeleteButtonClick(id:number){
+async function onDeleteButtonClick(id: number) {
   console.log(`id:${id}の削除ボタンが押下されたよ`);
-  await deleteProjectRecord(id)
-  await fetchRecords()
+  await deleteProjectRecord(id);
+  await fetchRecords();
 }
 
 onMounted(async () => {
-  await fetchRecords()
+  await fetchRecords();
 });
 </script>
 
@@ -55,8 +61,19 @@ onMounted(async () => {
             </span>
           </td>
           <td>
-            <button  class="btn btn-sm btn-primary" @click="onEditButtonClick(record.id)">編集</button>
-            <button  class="btn btn-sm btn-warning" @click="onDeleteButtonClick(record.id)" style="margin-left: 5px">削除</button>
+            <button
+              class="btn btn-sm btn-primary"
+              @click="onEditButtonClick(record)"
+            >
+              編集
+            </button>
+            <button
+              class="btn btn-sm btn-warning"
+              @click="onDeleteButtonClick(record.id)"
+              style="margin-left: 5px"
+            >
+              削除
+            </button>
           </td>
         </tr>
       </tbody>

@@ -77,7 +77,36 @@ export async function postProjectRecord(
 }
 
 export async function updateProjectRecord(projectRecord: ProjectRecord) {
-  //wip
+  type UpdateProjectRecordRequest = {
+    start_date: string;
+    end_date: string;
+    project_abstract: string;
+    project_detail: string;
+    member: number;
+  };
+
+  const id = projectRecord.id;
+  const data: UpdateProjectRecordRequest = {
+    start_date: projectRecord.startDate,
+    end_date: projectRecord.endDate,
+    project_abstract: projectRecord.projectAbstract,
+    project_detail: projectRecord.projectDetail,
+    member: 1,
+  };
+
+  try {
+    const res = await axios.put(`${url}${id}/`, data, {
+      headers: requestHeader,
+    });
+    if (res.status < 200 || res.status >= 400) {
+      throw Error("接続に失敗しました");
+    }
+
+    return res;
+  } catch (err) {
+    console.log(err);
+    throw Error("接続に失敗しました");
+  }
 }
 export async function deleteProjectRecord(id: number) {
   try {
@@ -93,5 +122,4 @@ export async function deleteProjectRecord(id: number) {
     console.log(err);
     throw Error("接続に失敗しました");
   }
-
 }

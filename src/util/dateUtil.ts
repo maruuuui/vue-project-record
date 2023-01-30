@@ -6,3 +6,10 @@ export function dateToString(d: Date): string {
   const formatted = `${year}-${month}-${day}`;
   return formatted;
 }
+
+// YYYY-MM-DD形式の文字列をDateにフォーマットする
+export function stringToDate(s: string) {
+  const epoc = Date.parse(s);
+  const date = new Date(epoc);
+  return date;
+}
