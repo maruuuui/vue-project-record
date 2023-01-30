@@ -85,6 +85,8 @@ onMounted(async () => {
     :endDate="ref(endDateOnEditRecordModal)"
     :projectAbstract="ref(projectAbstractOnEditRecordModal)"
     :projectDetail="ref(projectDetailOnEditRecordModal)"
+    :fetchRecords="fetchRecords"
+    :closeEditRecordModal="closeEditRecordModal"
   />
 </template>
 

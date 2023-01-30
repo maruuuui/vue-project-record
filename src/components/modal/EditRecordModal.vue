@@ -11,6 +11,8 @@ interface Props {
   endDate: Ref<Date>;
   projectAbstract: Ref<string>;
   projectDetail: Ref<string>;
+  fetchRecords: () => Promise<void>;
+  closeEditRecordModal: () => void;
 }
 
 const props = defineProps<Props>();
@@ -72,8 +74,11 @@ async function update() {
     try {
       await updateProjectRecord(requestData);
       console.log("ok");
+      await props.fetchRecords()
+      props.closeEditRecordModal()
     } catch (error) {
       console.log(error);
+      props.closeEditRecordModal()
     }
   }
 }
