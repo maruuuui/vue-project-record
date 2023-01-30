@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Datepicker from "vue3-datepicker";
-import { ref, reactive, type Ref } from "vue";
+import { computed, reactive, type Ref } from "vue";
 
 import { updateProjectRecord } from "@/util/api";
 import { dateToString } from "@/util/dateUtil";
@@ -14,6 +14,38 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+interface Emits {
+  (e: "update:startDate", startDate: Ref<Date>): void;
+  (e: "update:endDate", endDate: Ref<Date>): void;
+  (e: "update:projectAbstract", projectAbstract: Ref<string>): void;
+  (e: "update:projectDetail", projectDetail: Ref<string>): void;
+}
+const emit = defineEmits<Emits>();
+const startDate = computed({
+  get: () => props.startDate,
+  set: (value) => {
+    emit("update:startDate", value);
+  },
+});
+const endDate = computed({
+  get: () => props.endDate,
+  set: (value) => {
+    emit("update:endDate", value);
+  },
+});
+const projectAbstract = computed({
+  get: () => props.projectAbstract,
+  set: (value) => {
+    emit("update:projectAbstract", value);
+  },
+});
+const projectDetail = computed({
+  get: () => props.projectDetail,
+  set: (value) => {
+    emit("update:projectDetail", value);
+  },
+});
 
 const enddateStyleObject = reactive({
   display: "none",
@@ -100,7 +132,7 @@ function validate(): boolean {
             <Datepicker
               class="form-control"
               id="startDateFormControlInput"
-              v-model="props.startDate.value"
+              v-model="startDate.value"
             />
           </div>
           <div class="mb-3">
@@ -108,7 +140,7 @@ function validate(): boolean {
             <Datepicker
               class="form-control"
               id="endDateFormControlInput"
-              v-model="props.endDate.value"
+              v-model="endDate.value"
             />
             <div
               id="enddate-invalid-message"
@@ -126,7 +158,7 @@ function validate(): boolean {
               type="text"
               class="form-control"
               id="projectAbstractFormControlInput"
-              v-model="props.projectAbstract.value"
+              v-model="projectAbstract.value"
             />
             <div
               id="project-abstract-invalid-message"
@@ -144,7 +176,7 @@ function validate(): boolean {
               class="form-control"
               id="projectDetailFormControlInput"
               rows="3"
-              v-model="props.projectDetail.value"
+              v-model="projectDetail.value"
             ></textarea>
           </div>
         </div>

@@ -14,6 +14,6 @@ function openModal() {
 <template>
   <div style="padding-bottom: 0.5em; display: inline-block">
     <button class="btn btn-primary" @click="openModal">+</button>
-    <button class="btn btn-primary" style="margin-left: 5px">編集</button>
+    <button class="btn btn-primary" style="margin-left: 5px">レポート出力</button>
   </div>
 </template>
