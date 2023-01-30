@@ -5,6 +5,13 @@ import { ref, reactive } from "vue";
 import { postProjectRecord } from "@/util/api";
 import { dateToString } from "@/util/dateUtil";
 
+interface Props {
+  fetchRecords: () => Promise<void>;
+  closeCreateRecordModal: () => void;
+}
+
+const props = defineProps<Props>();
+
 const now = new Date();
 const startDateRef = ref(now);
 
@@ -40,9 +47,12 @@ async function post() {
     };
     try {
       await postProjectRecord(requestData);
+      await props.fetchRecords();
+      props.closeCreateRecordModal();
       console.log("ok");
     } catch (error) {
       console.log(error);
+      props.closeCreateRecordModal();
     }
   }
 }

@@ -1,20 +1,16 @@
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from "vue";
+import { onMounted, type Ref } from "vue";
 
-import { getProjectRecords, deleteProjectRecord } from "@/util/api";
+import { deleteProjectRecord } from "@/util/api";
 import type { ProjectRecord } from "@/types";
 
 interface Props {
+  records: Ref<ProjectRecord[]>;
   openEditRecordModal: (projectRecord: ProjectRecord) => void;
+  fetchRecords: () => Promise<void>;
 }
 
 const props = defineProps<Props>();
-
-const records: Ref<ProjectRecord[]> = ref([]);
-
-async function fetchRecords() {
-  records.value = await getProjectRecords();
-}
 
 async function onEditButtonClick(record: ProjectRecord) {
   console.log(`id:${record.id}の編集ボタンが押下されたよ`);
@@ -24,11 +20,11 @@ async function onEditButtonClick(record: ProjectRecord) {
 async function onDeleteButtonClick(id: number) {
   console.log(`id:${id}の削除ボタンが押下されたよ`);
   await deleteProjectRecord(id);
-  await fetchRecords();
+  await props.fetchRecords();
 }
 
 onMounted(async () => {
-  await fetchRecords();
+  await props.fetchRecords();
 });
 </script>
 
@@ -46,7 +42,7 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(record, idx) in records" :key="record.id">
+        <tr v-for="(record, idx) in props.records.value" :key="record.id">
           <th scope="row">{{ idx }}</th>
           <td>{{ record.startDate }}</td>
           <td>{{ record.endDate }}</td>

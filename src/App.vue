@@ -9,6 +9,13 @@ import CreateRecordModal from "@/components/modal/CreateRecordModal.vue";
 import EditRecordModal from "@/components/modal/EditRecordModal.vue";
 import type { ProjectRecord } from "./types";
 import { stringToDate } from "./util/dateUtil";
+import { getProjectRecords } from "@/util/api";
+
+const records: Ref<ProjectRecord[]> = ref([]);
+
+async function fetchRecords() {
+  records.value = await getProjectRecords();
+}
 
 // CreateRecordModal.vue で定義したモーダル
 let createRecordModal!: Modal;
@@ -62,9 +69,16 @@ onMounted(async () => {
 <template>
   <Layout>
     <RecordTableTab :openCreateRecordModal="openCreateRecordModal" />
-    <RecordTable :openEditRecordModal="openEditRecordModal" />
+    <RecordTable
+      :records="ref(records)"
+      :openEditRecordModal="openEditRecordModal"
+      :fetchRecords="fetchRecords"
+    />
   </Layout>
-  <CreateRecordModal />
+  <CreateRecordModal
+    :closeCreateRecordModal="closeCreateRecordModal"
+    :fetchRecords="fetchRecords"
+  />
   <EditRecordModal
     :id="ref(idOnEditRecordModal)"
     :startDate="ref(startDateOnEditRecordModal)"
