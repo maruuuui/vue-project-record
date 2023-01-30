@@ -9,11 +9,14 @@ function openModal() {
   console.log("openModal");
   props.openCreateRecordModal();
 }
+const downloadPath = "http://localhost:8000/report/download";
 </script>
 
 <template>
   <div style="padding-bottom: 0.5em; display: inline-block">
     <button class="btn btn-primary" @click="openModal">+</button>
-    <button class="btn btn-primary" style="margin-left: 5px">レポート出力</button>
+    <a :href="downloadPath" class="btn btn-primary" style="margin-left: 5px"
+      >csv出力</a
+    >
   </div>
 </template>
