@@ -79,3 +79,19 @@ export async function postProjectRecord(
 export async function updateProjectRecord(projectRecord: ProjectRecord) {
   //wip
 }
+export async function deleteProjectRecord(id: number) {
+  try {
+    const res = await axios.delete(`${url}${id}/`, {
+      headers: requestHeader,
+    });
+    if (res.status < 200 || res.status >= 400) {
+      throw Error("接続に失敗しました");
+    }
+
+    return res;
+  } catch (err) {
+    console.log(err);
+    throw Error("接続に失敗しました");
+  }
+
+}
