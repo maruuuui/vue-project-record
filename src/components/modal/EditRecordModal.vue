@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Datepicker from "vue3-datepicker";
-import { computed, reactive, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 
 import { updateProjectRecord } from "@/util/api";
 import { dateToString } from "@/util/dateUtil";
@@ -49,13 +49,6 @@ const projectDetail = computed({
   },
 });
 
-const enddateStyleObject = reactive({
-  display: "none",
-});
-const projectAbstractStyleObject = reactive({
-  display: "none",
-});
-
 async function update() {
   console.log("update()が実行されたよ");
   const startDate = dateToString(props.startDate.value);
@@ -74,14 +67,18 @@ async function update() {
     try {
       await updateProjectRecord(requestData);
       console.log("ok");
-      await props.fetchRecords()
-      props.closeEditRecordModal()
+      await props.fetchRecords();
+      props.closeEditRecordModal();
     } catch (error) {
       console.log(error);
-      props.closeEditRecordModal()
+      props.closeEditRecordModal();
     }
   }
 }
+
+// バリデーションエラーメッセージのだし分けに使う変数
+const isInvalidAbstract = ref(false);
+const isInvalidEnddate = ref(false);
 
 // バリデーションチェック
 function validate(): boolean {
@@ -90,18 +87,18 @@ function validate(): boolean {
   if (props.startDate.value > props.endDate.value) {
     isValid = false;
     // エラーメッセージ表示
-    enddateStyleObject.display = "block";
+    isInvalidEnddate.value = true;
   } else {
-    enddateStyleObject.display = "none";
+    isInvalidEnddate.value = false;
   }
 
   // 案件概要の入力チェック
   if (props.projectAbstract.value === "") {
     isValid = false;
     // エラーメッセージ表示
-    projectAbstractStyleObject.display = "block";
+    isInvalidAbstract.value = true;
   } else {
-    projectAbstractStyleObject.display = "none";
+    isInvalidAbstract.value = false;
   }
 
   return isValid;
@@ -150,7 +147,7 @@ function validate(): boolean {
             <div
               id="enddate-invalid-message"
               class="invalid-message"
-              :style="enddateStyleObject"
+              v-show="isInvalidEnddate"
             >
               終了日には開始日以降を設定してください。
             </div>
@@ -168,7 +165,7 @@ function validate(): boolean {
             <div
               id="project-abstract-invalid-message"
               class="invalid-message"
-              :style="projectAbstractStyleObject"
+              v-show="isInvalidAbstract"
             >
               このフィールドは必須です。
             </div>
@@ -197,7 +194,6 @@ function validate(): boolean {
 
 <style scoped>
 .invalid-message {
-  display: none;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 0.875em;

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Datepicker from "vue3-datepicker";
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 
 import { postProjectRecord } from "@/util/api";
 import { dateToString } from "@/util/dateUtil";
@@ -23,13 +23,6 @@ let startDate = "";
 let endDate = "";
 let projectAbstract = "";
 let projectDetail = "";
-
-const enddateStyleObject = reactive({
-  display: "none",
-});
-const projectAbstractStyleObject = reactive({
-  display: "none",
-});
 
 async function post() {
   console.log("post()が実行されたよ");
@@ -57,6 +50,10 @@ async function post() {
   }
 }
 
+// バリデーションエラーメッセージのだし分けに使う変数
+const isInvalidAbstract = ref(false);
+const isInvalidEnddate = ref(false);
+
 // バリデーションチェック
 function validate(): boolean {
   // 終了日が開始日以降であることをチェック
@@ -64,18 +61,18 @@ function validate(): boolean {
   if (startDateRef.value > endDateRef.value) {
     isValid = false;
     // エラーメッセージ表示
-    enddateStyleObject.display = "block";
+    isInvalidEnddate.value = true;
   } else {
-    enddateStyleObject.display = "none";
+    isInvalidEnddate.value = false;
   }
 
   // 案件概要の入力チェック
   if (projectAbstract === "") {
     isValid = false;
     // エラーメッセージ表示
-    projectAbstractStyleObject.display = "block";
+    isInvalidAbstract.value = true;
   } else {
-    projectAbstractStyleObject.display = "none";
+    isInvalidAbstract.value = false;
   }
 
   return isValid;
@@ -124,7 +121,7 @@ function validate(): boolean {
             <div
               id="enddate-invalid-message"
               class="invalid-message"
-              :style="enddateStyleObject"
+              v-show="isInvalidEnddate"
             >
               終了日には開始日以降を設定してください。
             </div>
@@ -142,7 +139,7 @@ function validate(): boolean {
             <div
               id="project-abstract-invalid-message"
               class="invalid-message"
-              :style="projectAbstractStyleObject"
+              v-show="isInvalidAbstract"
             >
               このフィールドは必須です。
             </div>
@@ -171,7 +168,6 @@ function validate(): boolean {
 
 <style scoped>
 .invalid-message {
-  display: none;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 0.875em;
