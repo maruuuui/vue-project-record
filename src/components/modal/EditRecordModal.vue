@@ -116,9 +116,7 @@ function validate(): boolean {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editRecordModalLabel">
-            {{ props.id }}案件履歴の編集
-          </h5>
+          <h5 class="modal-title" id="editRecordModalLabel">案件履歴の編集</h5>
           <button
             type="button"
             class="btn-close"

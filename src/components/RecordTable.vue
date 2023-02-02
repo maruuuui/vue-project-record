@@ -48,13 +48,13 @@ onMounted(async () => {
           <td>{{ record.endDate }}</td>
           <td>{{ record.projectAbstract }}</td>
           <td>
-            <span
+            <template
               v-for="(str, strIdx) in record.projectDetail.split('\n')"
-              :key="strIdx"
+              :key="record.id + '-' + strIdx"
             >
               {{ str }}
               <br />
-            </span>
+            </template>
           </td>
           <td>
             <button
